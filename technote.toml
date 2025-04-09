@@ -1,0 +1,23 @@
+[technote]
+id = "DMTN-312"
+series_id = "DMTN"
+canonical_url = "https://dmtn-312.lsst.io"
+github_url = "https://github.com/lsst-dm/dmtn-312"
+github_default_branch = "main"
+date_created = 2025-04-09T18:45:40Z
+organization.name = "Vera C. Rubin Observatory"
+organization.ror = "https://ror.org/048g3cy84"
+license.id = "CC-BY-4.0"
+
+[technote.status]
+state = "draft"
+
+[[technote.authors]]
+name.given = "Dan S."
+name.family = "Taranu"
+internal_id = "taranuds"
+orcid = "https://orcid.org/0000-0001-6268-1882"
+[[technote.authors.affiliations]]
+name = "Department of Astrophysical Sciences"
+internal_id = "Princeton-Astro"
+address = "Princeton University, Princeton, NJ 08544, USA"
