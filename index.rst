@@ -18,28 +18,28 @@ Motivation
 ==========
 
 Many of the science cases for the Rubin Observatory/LSST survey, particularly those covered by the Galaxies and Dark Energy Science Collaborations, are dependent on measuring magnitudes (i.e. total fluxes) and shapes of galaxies.
-As of 2025, the main package providing galaxy flux measurement in the science pipelines is/was  `meas_modelfit <https://github.com/lsst/meas_modelfit>`_, which dates to (at least) summer 2009.
+As of 2025, the main package providing galaxy flux measurement in the science pipelines :cite:`PSTN-019` is/was  `meas_modelfit <https://github.com/lsst/meas_modelfit>`_, which dates to (at least) summer 2009.
 ``meas_modelfit``, like ``MultiProFit``, implements forward modelling of images of astronomical sources (star and galaxies).
 Both sources and the point spread function in each image are modelled as Gaussian mixtures.
 Initially, it was envisioned that the package would perform simultaneous modelling of individual exposures, dubbed "multifit" (indeed, there was a ``meas_multifit`` subpackage for some time).
 By 2015, most development of ``meas_modelfit`` was completed and it had become increasingly clear that multifit would be prohibitively computationally expensive on real LSST data and provide marginal benefits over fitting coadded images.
 In 2018, it was decided to focus efforts on either enhancing or replacing ``meas_modelfit`` with a package that supported simultaneous fitting of multiple bands (with one coadd per band), and with improved galaxy models.
 
-Development of MultiProFit began in mid-2018 with the idea of extending the then relatively new `ProFit <https://github.com/ICRAR/ProFit>`_ code and its fairly rudimentary Python bindings `pyprofit <https://github.com/ICRAR/pyprofit>`_.
+Development of MultiProFit began in mid-2018 with the idea of extending the then relatively new `ProFit <https://github.com/ICRAR/ProFit>`_ code :cite:`2017MNRAS.466.1513R` and its fairly rudimentary Python bindings `pyprofit <https://github.com/ICRAR/pyprofit>`_.
 ProFit does and did support a wider variety of parametric galaxy and PSF models, as well a variety of Bayesian optimizers, but the latter are only available in the R interface.
 More importantly, while ProFit supports accurate pixel integration of various analytic profiles, it does not natively support direct evaluation of Gaussian mixture models (GMMs) - that is, all models evaluate the pixel-integrated PSF and galaxy profile, and then convolve the two via fast Fourier transforms.
 Early testing confirmed that this is, broadly speaking, too slow to be feasible to run on a survey as large and deep as LSST, and GMMs are the only viable solution.
 This is especially true for evaluating Sersic profiles with large indices (n>6), which necessitates oversampling of the pre-convolution profile and the PSF to compute the convolved profile accurately.
 
-The use of GMMs in galaxy modelling dates began several years earlier with `Hogg & Lang (2013) <https://ui.adsabs.harvard.edu/abs/2013PASP..125..719H%2F/abstract>`_, who provided Gaussian mixture approximations to the widely-used Sersic profile; these approximations are indeed used in ``meas_modelfit``.
-In 2018, the `Tractor <https://github.com/dstndstn/tractor>`_ code (Lang & Hogg) was already public, and has since been used to process images from the Dark Energy Camera Legacy Survey (`DECaLS <https://www.legacysurvey.org/decamls/>`_).
+The use of GMMs in galaxy modelling dates began several years earlier with :cite:`2013PASP..125..719H`, who provided Gaussian mixture approximations to the widely-used Sersic profile; these approximations are indeed used in ``meas_modelfit``.
+In 2018, the `Tractor <https://github.com/dstndstn/tractor>`_ code :cite:`2016ascl.soft04008L` was already public, and has since been used to process images from the Dark Energy Camera Legacy Survey (`DECaLS <https://www.legacysurvey.org/decamls/>`_).
 However, in `DM-14637 <https://rubinobs.atlassian.net/issues/DM-14637>`_ it was determined that adopting Tractor would take at least as much effort as writing an entirely new package, and so development began on the first iteration of ``MultiProFit`` (now archived at `legacy-multiprofit <https://github.com/lsst-dm/legacy-multiprofit>`_).
 
 Erin Sheldon's `ngmix <https://github.com/esheldon/ngmix>`_ code was also evaluated and experimentally/unofficially supported for a time through `meas_extensions_ngmix <https://github.com/lsst-dm/meas_extensions_ngmix>`_.
 ``ngmix``'s galaxy modelling performance was last evaluated in August 2021 in `DM-30734 <https://rubinobs.atlassian.net/issues/DM-30734>`_ and was comparable to ``multiprofit`` (at the time), with both well behind ``meas_modelfit``.
 Since then, ``ngmix``'s development has focused more on uses for weak lensing such as metadetection, for which it is now included in the science pipelines; however, ``meas_extensions_ngmix`` was abandoned in favour of improving ``multiprofit``'s performance.
 
-To our knowledge, the only other comparable GMM-based code is `forcepho <https://github.com/bd-j/forcepho>`_, the development of which began (unbeknownst to DST) on or prior to early 2017.
+To our knowledge, the only other comparable GMM-based code is `forcepho <https://github.com/bd-j/forcepho>`_ :cite:`2024ascl.soft10006B`, the development of which began (unbeknownst to DST) on or prior to early 2017.
 ``forcepho`` has not been evaluated in any similar way, and does share some features and similarities with ``multiprofit``, as well as additional features such as support for GPU and parallel evaluation.
 At this time, evaluation of its performance is neither planned nor ruled out.
 
@@ -134,7 +134,7 @@ Fitting the PSF model simultaneously with profiles of extended objects is danger
 This was tested on KiDS data with `AllStarFit <https://github.com/taranu/allstarfit>`_ and the unavoidable result is that galaxies bias the PSF parameters.
 It is possible to fit a common PSF model (with fractional fluxes) to multiple stars by sharing structural parameter objects.
 As this methodology is not yet needed, no convenient interface for doing so is provided.
-Users interested in generic PSF model fitting should either fit individual stars, or use a code like `Piff <https://github.com/lsst/meas_extensions_piff>`_, which, amongst other features, allows for spatial variations of PSF parameters.
+Users interested in generic PSF model fitting should either fit individual stars, or use a code like `Piff <https://github.com/lsst/meas_extensions_piff>`_ :cite:`2021ascl.soft02024J`, which, amongst other features, allows for spatial variations of PSF parameters.
 
 MultiProFit also does not support oversampled model evaluation.
 As such, it is critical to ensure that the PSF model is not undersampled - i.e., that individual Gaussian components have σ>0.8 pixels.
@@ -150,7 +150,7 @@ The subtracted size can be added back in to the sizes of extended objects, altho
 Galaxy Profiles
 ---------------
 More consequential than PSF modelling differences is the choice of galaxy profile.
-``meas_modelfit`` implements only the fixed Sersic index profiles originally presented in Hogg & Lang (2013).
+``meas_modelfit`` implements only the fixed Sersic index profiles originally presented in :cite:`2013PASP..125..719H`.
 ``MultiProFit`` allows for Sersic profiles with index values between 0.5 and 6.
 ``meas_modelfit`` is typically configured to fit the composite model (cModel or CModel) popularized by the Sloan Digital Sky Survey (SDSS).
 This model is essentially the best-fit linear combination of two independent exponential (n=1) and de Vaucouleurs (n=4) profile fits to the same galaxy.
@@ -183,9 +183,9 @@ Optimizers
 ----------
 Unlike ``forcepho``, ``ProFit`` and ``Tractor``, ``MultiProFit`` does not yet support Bayesian optimization through algorithms like MCMC.
 Currently, ``MultiProFit`` uses SciPy's nonlinear maximum likelihood optimizers.
-Limited and largely experimental support is also provided for `PyGMO <https://esa.github.io/pygmo2/>`_, although none of the tested optimizers appear to perform better than SciPy's.
+Limited and largely experimental support is also provided for `PyGMO <https://esa.github.io/pygmo2/>`_ :cite:`10.21105/joss.02338`, although none of the tested optimizers appear to perform better than SciPy's.
 
-``meas_modelfit`` uses its own C++ optimizers, which are described in the `Doxygen C++ documentation <http://doxygen.lsst.codes/stack/doxygen/x_mainDoxyDoc/classlsst_1_1meas_1_1modelfit_1_1_optimizer.html>`_, and were inspired by Numerical Optimization `(Nocedal & Wright) <https://link.springer.com/book/10.1007/978-0-387-40065-5>`_.
+``meas_modelfit`` uses its own C++ optimizers, which are described in the `Doxygen C++ documentation <http://doxygen.lsst.codes/stack/doxygen/x_mainDoxyDoc/classlsst_1_1meas_1_1modelfit_1_1_optimizer.html>`_, and were inspired by Numerical Optimization :cite:`nocedal2006numerical`.
 
 Usage
 =====
@@ -230,3 +230,8 @@ The challenge is more practical than conceptual - it does add complexity to any 
 For example, the WCS solutions for coadded images may not be consistent enough to define a common centroid in sky coordinates.
 Archival data may have been processed before commonly-used star reference catalogs like Gaia were available.
 Additionally, fitting stars from different epochs may require implementation of proper motions for their centroids.
+
+References
+==========
+
+.. bibliography::
