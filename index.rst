@@ -2,6 +2,8 @@
 The MultiProFit astronomical source modelling code
 ##################################################
 
+DOI: `10.71929/rubin/2584108 <https://doi.org/10.71929/rubin/2584108>`_
+
 .. abstract::
 
    This note describes the MultiProFit astronomical source modelling code, and particularly its development and use for modelling coadded objects in the LSST Science Pipelines.
